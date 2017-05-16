@@ -8,6 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="swt1" level="project" />
-    <orderEntry type="library" name="swt" level="project" />
+    <orderEntry type="library" name="Jogl" level="project" />
   </component>
 </module>
