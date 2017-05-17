@@ -7,7 +7,7 @@ package com.mmclcs.vismusic;
 public class Wave {
 
     // TODO OPTIMAL SPEED
-    private static final float speed = 1;
+    private static final float speed = 0.5f / 60.0f;
 
     private final float amplitude;
     private final float xOrigin;
@@ -25,5 +25,12 @@ public class Wave {
     }
 
     // TODO CREATE UPDATE FUNCTION
+    void update() {
+        travel += speed;
+    }
+
+    public float getTravel() {
+        return travel;
+    }
 
 }

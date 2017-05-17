@@ -17,9 +17,10 @@ class GridPlane extends Thread implements Drawable {
     // Vertices objects for grid
     private final Vertex[][] vertices;
     private final ArrayList<Wave> waves;
+    private boolean running;
 
     GridPlane() {
-
+        running = true;
         // Initialize vertices objects
         vertices = new Vertex[100][100];
         for (Vertex[] aVertice : vertices) {
@@ -29,6 +30,18 @@ class GridPlane extends Thread implements Drawable {
         }
         // Init waves
         waves = new ArrayList<>();
+    }
+
+    @Override
+    public void run() {
+        while (running) {
+            for (int index = 0; index < waves.size(); index++) {
+                Wave item = waves.get(index);
+                item.update();
+                float travel = item.getTravel();
+
+            }
+        }
     }
 
     @Override
