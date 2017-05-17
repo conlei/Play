@@ -42,22 +42,22 @@ public class AudioCore {
         inputclip.start();
     }
 
-    /*
-    play the sound clip
-    the difference between this and start is that start will always restart the audio while this one simply resumes it
-    */
-    public static void PlaySound(Clip inputclip) {
-        inputclip.start();
-    }
-
-    // pause the sound clip
-    public static void PauseSound(Clip inputclip) {
-        inputclip.stop();
-    }
-
     // returns percentage (1-100) of the progress of the clip
     public static double GetProgress(Clip inputclip) {
         double progress = ((double)inputclip.getMicrosecondPosition()/(double)inputclip.getFrameLength())*100.0;
         return progress;
+    }
+
+    // returns human-readable progress as a string
+    public static String GetHumanProgress(Clip inputclip) {
+        return microsecondToHuman(inputclip.getMicrosecondPosition()) + " / " + microsecondToHuman(inputclip.getMicrosecondLength());
+    }
+
+    public static String microsecondToHuman(long microseconds) { // converts microseconds to human readable time
+        long fullseconds = microseconds/1000000; // convert microseconds to full seconds
+        long seconds = fullseconds % 60;
+        long minutes = fullseconds / 60;
+
+        return (int)minutes + ":" + String.format("%02d" ,(int)seconds);
     }
 }
