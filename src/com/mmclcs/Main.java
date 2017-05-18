@@ -2,13 +2,18 @@ package com.mmclcs;
 
 import javax.sound.sampled.Clip;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Main {
 
     public static Clip music;
 
     public static void main(String[] args) {
-        music = AudioCore.InitSound("res/music.wav");
+        if (args.length == 0) {
+            music = AudioCore.InitSound("res/music.wav");
+        } else {
+            music = AudioCore.InitSound(args[0]);
+        }
         AudioCore.StartSound(music);
 
         while (true) {
@@ -21,6 +26,23 @@ public class Main {
             if (input.toLowerCase().equals("progress")) {
                 System.out.println(AudioCore.GetHumanProgress(music));
             } // if input "progress" print progress of music
+
+            if (System.getProperty("os.name").contains("Windows")) {
+                if (input.matches("^([A-Z]:\\\\)(.+)")) {
+                    music.stop();
+                    music.close();
+
+                    music = AudioCore.InitSound(input);
+                    AudioCore.StartSound(music);
+                }
+            } else if (input.startsWith("/")) {
+                music.stop();
+                music.close();
+
+                music = AudioCore.InitSound(input);
+                AudioCore.StartSound(music);
+            }
+
             String[] timeCheck = input.split(":");
             if(timeCheck.length == 2) {
                 if (isNumber(timeCheck[0]) && isNumber(timeCheck[1])) {
