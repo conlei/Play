@@ -2,7 +2,6 @@ package com.mmclcs;
 
 import javax.sound.sampled.Clip;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class Main {
 
@@ -15,6 +14,11 @@ public class Main {
             music = AudioCore.InitSound(args[0]);
         }
         AudioCore.StartSound(music);
+
+        GuiCore.init();
+        GuiCore window = GuiCore.makeNewContext();
+        window.setBounds(100, 100, 500, 150);
+        window.setVisible(true);
 
         while (true) {
             Scanner userinput = new Scanner(System.in);

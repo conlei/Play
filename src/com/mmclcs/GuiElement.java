@@ -47,7 +47,6 @@ public abstract class GuiElement {
         return y;
     }
 
-
     public void setWidth(int width) {
         this.width = width;
     }
@@ -62,5 +61,9 @@ public abstract class GuiElement {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public Texture getTexture() {
+        return graphics;
     }
 }

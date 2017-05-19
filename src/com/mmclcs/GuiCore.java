@@ -5,6 +5,7 @@ import com.jogamp.opengl.awt.GLCanvas;
 
 import javax.swing.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * Jogl initalizer and window creator
@@ -14,6 +15,7 @@ public class GuiCore extends JFrame implements GLEventListener {
 
     private static boolean initialized = false;
     private static GLProfile profile;
+    private static ArrayList<GuiElement> components;
     private int width;
     private int height;
 
@@ -50,6 +52,7 @@ public class GuiCore extends JFrame implements GLEventListener {
     private GuiCore(GLCanvas glCanvas) {
         glCanvas.addGLEventListener(this);
         getContentPane().add(glCanvas);
+        components = new ArrayList<>();
     }
 
     @Override
@@ -65,6 +68,18 @@ public class GuiCore extends JFrame implements GLEventListener {
     @Override
     public void display(GLAutoDrawable glAutoDrawable) {
         GL2 gl = glAutoDrawable.getGL().getGL2();
+        for (GuiElement item : components) {
+            gl.glBegin(GL2.GL_POLYGON);
+            gl.glVertex2f(item.getX(), item.getY());
+            gl.glTexCoord2f(1, 0);
+            gl.glVertex2f(item.getX(), item.getY() + item.getWidth());
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex2f(item.getX() + item.getHeight(), item.getY() + item.getWidth());
+            gl.glTexCoord2f(0, 1);
+            gl.glVertex2f(item.getX() + item.getHeight(), item.getY());
+            gl.glTexCoord2f(1, 0);
+            gl.glEnd();
+        }
     }
 
     @Override
