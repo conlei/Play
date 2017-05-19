@@ -68,18 +68,6 @@ public class GuiCore extends JFrame implements GLEventListener {
     @Override
     public void display(GLAutoDrawable glAutoDrawable) {
         GL2 gl = glAutoDrawable.getGL().getGL2();
-        for (GuiElement item : components) {
-            gl.glBegin(GL2.GL_POLYGON);
-            gl.glVertex2f(item.getX(), item.getY());
-            gl.glTexCoord2f(1, 0);
-            gl.glVertex2f(item.getX(), item.getY() + item.getWidth());
-            gl.glTexCoord2f(1, 1);
-            gl.glVertex2f(item.getX() + item.getHeight(), item.getY() + item.getWidth());
-            gl.glTexCoord2f(0, 1);
-            gl.glVertex2f(item.getX() + item.getHeight(), item.getY());
-            gl.glTexCoord2f(1, 0);
-            gl.glEnd();
-        }
     }
 
     @Override
