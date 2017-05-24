@@ -5,10 +5,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class AudioCore {
+/**
+ * Created by Connor
+ * Static class methods used to handle music
+ */
+class AudioCore {
 
     // initialises an Clip object
-    public static Clip InitSound(String filepath) {
+    static Clip InitSound(String filepath) {
         Clip clip;
 
         try {
@@ -37,23 +41,22 @@ public class AudioCore {
     }
 
     // start the sound clip
-    public static void StartSound(Clip inputclip) {
+    static void StartSound(Clip inputclip) {
         inputclip.setFramePosition(0); // be kind; rewind
         inputclip.start();
     }
 
-    // returns percentage (1-100) of the progress of the clip
-    public static double GetProgress(Clip inputclip) {
-        double progress = ((double)inputclip.getMicrosecondPosition()/(double)inputclip.getFrameLength())*100.0;
-        return progress;
+    // returns percentage (0-100) of the progress of the clip
+    static double GetProgress(Clip inputclip) {
+        return ((double) inputclip.getMicrosecondPosition() / (double) inputclip.getMicrosecondLength()) * 100.0;
     }
 
     // returns human-readable progress as a string
-    public static String GetHumanProgress(Clip inputclip) {
+    static String GetHumanProgress(Clip inputclip) {
         return microsecondToHuman(inputclip.getMicrosecondPosition()) + " / " + microsecondToHuman(inputclip.getMicrosecondLength());
     }
 
-    public static String microsecondToHuman(long microseconds) { // converts microseconds to human readable time
+    private static String microsecondToHuman(long microseconds) { // converts microseconds to human readable time
         long fullseconds = microseconds/1000000; // convert microseconds to full seconds
         long seconds = fullseconds % 60;
         long minutes = fullseconds / 60;

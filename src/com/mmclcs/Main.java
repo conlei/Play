@@ -1,25 +1,31 @@
 package com.mmclcs;
 
 import javax.sound.sampled.Clip;
+import javax.swing.*;
 import java.util.Scanner;
 
 public class Main {
 
-    public static Clip music;
+    private static Clip music;
+    private static GuiCore window;
 
     public static void main(String[] args) {
+        // Initialize music and gui
         if (args.length == 0) {
             music = AudioCore.InitSound("res/music.wav");
         } else {
             music = AudioCore.InitSound(args[0]);
         }
+        GuiCore.init();
+        window = GuiCore.makeNewContext();
+        window.setAudioInput(music);
+        window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        window.setAlwaysOnTop(true);
+        window.setBounds(100, 100, 500, 70);
+        window.setVisible(true);
         AudioCore.StartSound(music);
 
-        GuiCore.init();
-        GuiCore window = GuiCore.makeNewContext();
-        window.setBounds(100, 100, 500, 150);
-        window.setVisible(true);
-
+        // Looks for input
         while (true) {
             Scanner userinput = new Scanner(System.in);
 
@@ -33,18 +39,10 @@ public class Main {
 
             if (System.getProperty("os.name").contains("Windows")) {
                 if (input.matches("^([A-Z]:\\\\)(.+)")) {
-                    music.stop();
-                    music.close();
-
-                    music = AudioCore.InitSound(input);
-                    AudioCore.StartSound(music);
+                    changeClip(input);
                 }
             } else if (input.startsWith("/")) {
-                music.stop();
-                music.close();
-
-                music = AudioCore.InitSound(input);
-                AudioCore.StartSound(music);
+                changeClip(input);
             }
 
             String[] timeCheck = input.split(":");
@@ -63,6 +61,12 @@ public class Main {
         }
     }
 
+    /**
+     * Checks if an input is a number
+     *
+     * @param input String input to parse
+     * @return whether or not it is a number
+     */
     private static boolean isNumber(String input) {
         try {
             Integer.parseInt(input);
@@ -70,5 +74,21 @@ public class Main {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Changes the clip to another file
+     *
+     * @param file path to file
+     */
+    private static void changeClip(String file) {
+        // Close the current music
+        music.stop();
+        music.close();
+
+        // Init new music
+        music = AudioCore.InitSound(file);
+        window.setAudioInput(music);
+        AudioCore.StartSound(music);
     }
 }

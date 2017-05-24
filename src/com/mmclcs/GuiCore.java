@@ -3,9 +3,8 @@ package com.mmclcs;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 /**
  * Jogl initalizer and window creator
@@ -15,14 +14,12 @@ public class GuiCore extends JFrame implements GLEventListener {
 
     private static boolean initialized = false;
     private static GLProfile profile;
-    private static ArrayList<GuiElement> components;
-    private int width;
-    private int height;
+    private Clip input;
 
     /**
      * Initialize open gl, must be done before using any other method this class offers
      */
-    public static void init() {
+    static void init() {
         profile = GLProfile.get(GLProfile.GL2);
         initialized = true;
     }
@@ -33,26 +30,38 @@ public class GuiCore extends JFrame implements GLEventListener {
      * @return OpenGl JFrame
      * @throws IllegalStateException if GCore has not been initialized.
      */
-    public static GuiCore makeNewContext() throws IllegalStateException {
-        log("Request made for a new graphics context");
+    static GuiCore makeNewContext() throws IllegalStateException {
         if (!initialized) throw new IllegalStateException("Graphics engine not initialized yet");
         GLCapabilities capabilities = new GLCapabilities(profile);
         return new GuiCore(new GLCanvas(capabilities));
     }
 
-    private static void log(String msg) {
-        LocalDateTime item = LocalDateTime.now();
-        System.out.println("[GCore: " + item.getMonth().name() + " " +
-                item.getDayOfMonth() + ", " +
-                item.getHour() + ":" +
-                item.getMinute() + ":" +
-                item.getSecond() + "] " + msg);
-    }
-
+    /**
+     * Creates a guiCore object, should only be created via GuiCore.createNewContext()
+     *
+     * @param glCanvas gl drawing object
+     */
     private GuiCore(GLCanvas glCanvas) {
+        super();
         glCanvas.addGLEventListener(this);
         getContentPane().add(glCanvas);
-        components = new ArrayList<>();
+        setResizable(false);
+        Thread updater = new Thread(() -> {
+            while (true) {
+                glCanvas.display();
+            }
+        });
+        updater.setDaemon(true);
+        updater.start();
+    }
+
+    /**
+     * Sets the audio clip to poll from for checking music progress (should be the currently playing music clip)
+     *
+     * @param music current music clip
+     */
+    void setAudioInput(Clip music) {
+        this.input = music;
     }
 
     @Override
@@ -68,11 +77,35 @@ public class GuiCore extends JFrame implements GLEventListener {
     @Override
     public void display(GLAutoDrawable glAutoDrawable) {
         GL2 gl = glAutoDrawable.getGL().getGL2();
+        // Draw basic bar
+        gl.glBegin(GL2.GL_POLYGON);
+        gl.glColor3f(0, 0, 0.3f);
+        gl.glVertex2f(-0.9f, -0.5f);
+        gl.glVertex2f(-0.9f, 0.5f);
+        gl.glColor3f(0, 0.3f, 0);
+        gl.glVertex2f(0.9f, 0.5f);
+        gl.glVertex2f(0.9f, -0.5f);
+        gl.glEnd();
+        // Draw input bar (if such exists)
+        if (input != null) {
+            float progress = (float) AudioCore.GetProgress(input) / 100.0f;
+            if (progress > 0) {
+                gl.glBegin(GL2.GL_POLYGON);
+                gl.glColor3f(0, 0, 1);
+                gl.glVertex2f(-0.9f, -0.5f);
+                gl.glVertex2f(-0.9f, 0.5f);
+                // SET COLOR
+                gl.glColor3f(0, progress, 1 - progress);
+                // SET END VERTEX
+                gl.glVertex2f(-0.9f + (1.8f * progress), 0.5f);
+                gl.glVertex2f(-0.9f + (1.8f * progress), -0.5f);
+                gl.glEnd();
+            }
+        }
     }
 
     @Override
     public void reshape(GLAutoDrawable glAutoDrawable, int i, int i1, int i2, int i3) {
-        width = i2;
-        height = i3;
+
     }
 }
