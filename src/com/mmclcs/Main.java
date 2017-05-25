@@ -21,7 +21,7 @@ public class Main {
         window.setAudioInput(music);
         window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         window.setAlwaysOnTop(true);
-        window.setBounds(100, 100, 300, 50);
+        window.setBounds(100, 100, 500, 150);
         window.setVisible(true);
         AudioCore.StartSound(music);
 
@@ -86,9 +86,13 @@ public class Main {
         music.stop();
         music.close();
 
-        // Init new music
-        music = AudioCore.InitSound(file);
-        window.setAudioInput(music);
-        AudioCore.StartSound(music);
+        try {
+            // Init new music
+            music = AudioCore.InitSound(file);
+            window.setAudioInput(music);
+            AudioCore.StartSound(music);
+        } catch (RuntimeException e) {
+            System.out.println("Failed to change song. Check the filetype is supported and the path is correct.");
+        }
     }
 }
