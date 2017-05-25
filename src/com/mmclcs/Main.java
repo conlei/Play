@@ -21,7 +21,7 @@ public class Main {
         window.setAudioInput(music);
         window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         window.setAlwaysOnTop(true);
-        window.setBounds(100, 100, 500, 70);
+        window.setBounds(100, 100, 300, 50);
         window.setVisible(true);
         AudioCore.StartSound(music);
 

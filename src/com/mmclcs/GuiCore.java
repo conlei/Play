@@ -66,7 +66,8 @@ public class GuiCore extends JFrame implements GLEventListener {
 
     @Override
     public void init(GLAutoDrawable glAutoDrawable) {
-
+        GL2 gl = glAutoDrawable.getGL().getGL2();
+        gl.glClearColor(0.9f, 0.9f, 0.9f, 1f);
     }
 
     @Override
@@ -77,14 +78,15 @@ public class GuiCore extends JFrame implements GLEventListener {
     @Override
     public void display(GLAutoDrawable glAutoDrawable) {
         GL2 gl = glAutoDrawable.getGL().getGL2();
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
         // Draw basic bar
         gl.glBegin(GL2.GL_POLYGON);
         gl.glColor3f(0, 0, 0.3f);
-        gl.glVertex2f(-0.9f, -0.5f);
-        gl.glVertex2f(-0.9f, 0.5f);
+        gl.glVertex2f(-0.98f, -0.8f);
+        gl.glVertex2f(-0.98f, 0.8f);
         gl.glColor3f(0, 0.3f, 0);
-        gl.glVertex2f(0.9f, 0.5f);
-        gl.glVertex2f(0.9f, -0.5f);
+        gl.glVertex2f(0.98f, 0.8f);
+        gl.glVertex2f(0.98f, -0.8f);
         gl.glEnd();
         // Draw input bar (if such exists)
         if (input != null) {
@@ -92,13 +94,13 @@ public class GuiCore extends JFrame implements GLEventListener {
             if (progress > 0) {
                 gl.glBegin(GL2.GL_POLYGON);
                 gl.glColor3f(0, 0, 1);
-                gl.glVertex2f(-0.9f, -0.5f);
-                gl.glVertex2f(-0.9f, 0.5f);
+                gl.glVertex2f(-0.98f, -0.8f);
+                gl.glVertex2f(-0.98f, 0.8f);
                 // SET COLOR
                 gl.glColor3f(0, progress, 1 - progress);
                 // SET END VERTEX
-                gl.glVertex2f(-0.9f + (1.8f * progress), 0.5f);
-                gl.glVertex2f(-0.9f + (1.8f * progress), -0.5f);
+                gl.glVertex2f(-0.98f + (1.8f * progress), 0.8f);
+                gl.glVertex2f(-0.98f + (1.8f * progress), -0.8f);
                 gl.glEnd();
             }
         }
