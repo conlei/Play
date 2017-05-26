@@ -28,7 +28,7 @@ class AudioCore {
                 return clip;
             } else {
                 throw new RuntimeException("AudioCore: File does not exist.");
-            }
+            } // mac really doesn't like this next bit
         } catch (UnsupportedAudioFileException e) {
             throw new RuntimeException("AudioCore: Unsupported filetype.");
         } catch (UnsupportedEncodingException e) {
